@@ -2,8 +2,9 @@
 #define Vertex_hpp
 
 #include <iostream>
-#include <vector>
+#include <set>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 
 #include "Brain.hpp"
@@ -19,7 +20,8 @@ public:
     
     //Setters
     
-    void addConnection(int _v){connections.push_back(_v);}
+    void addConnection(int _v){connections.insert(_v);}
+    void removeConnection(int _v){connections.erase(_v);}
     
     //Getters
     
@@ -27,9 +29,12 @@ public:
     int getMass(){return mass;}
     int getId(){return id;}
     bool isConnected(int _v){
-        for(auto& i : connections) if(i == _v) return true;
-        return false;
+        auto i = connections.lower_bound(_v);
+        if(i == connections.end()) return false;
+        if(*i != _v) return false;
+        return true;
     }
+    Vector2D getVelocity(){return {velocity_x,velocity_y};}
     
 private:
     SDL_Renderer* renderer;
@@ -39,10 +44,10 @@ private:
     Vector2D pos;
     Vector2D force;
     double force_angle;
-    double acceleration;
-    double velocity;
+    double acceleration_x, acceleration_y;
+    double velocity_x, velocity_y;
     double mass;
-    std::vector<int> connections;
+    std::set<int> connections;
 };
 
 #endif /* Vertex_hpp */
