@@ -25,7 +25,7 @@ int main() {
         return 1;
     }
     
-    window = SDL_CreateWindow("Graph", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1000, 1000, 0);
+    window = SDL_CreateWindow("Graph", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 400, 400, 0);
     if(window == NULL){
         SDL_Quit();
         std::cout << "Error: " << SDL_GetError() << std::endl;
@@ -40,12 +40,13 @@ int main() {
         return 1;
     }
     
-    ver.push_back(new Vertex(1,500,500,renderer));
-    ver.push_back(new Vertex(2,500,550,renderer));
-    ver.push_back(new Vertex(3,550,550,renderer));
-    ver.push_back(new Vertex(4,450,550,renderer));
-    ver[0]->addConnection(2);
-    ver[1]->addConnection(1);
+    ver.push_back(new Vertex(1,200,200,1,renderer));
+    ver.push_back(new Vertex(2,200,300,1,renderer));
+    //ver.push_back(new Vertex(3,250,250,1,renderer));
+    //ver.push_back(new Vertex(4,150,250,1,renderer));
+    //ver[0]->addConnection(2);
+    //ver[1]->addConnection(1);
+    //ver[2]->addConnection(1);
 
     while(running){
         frameStart = SDL_GetTicks();
@@ -63,31 +64,33 @@ int main() {
         SDL_RenderClear(renderer);
         
         for(auto& i: ver){
-            std::cout << i->getPos().x << " " << i->getPos().y << std::endl;
+            //std::cout << i->getPos().x << " " << i->getPos().y << std::endl;
             for(auto& j:ver){
                 if(i->getId() != j->getId()){
                     if(!i->isConnected(j->getId())){
-                        double temp_r = Brain::getDistance(i->getPos(), j->getPos());
-                        if(temp_r > MAX_DIST) continue;
-                        double temp_force_val = G*(i->getMass()*-j->getMass())/(temp_r == 0 ? 0.0001 : temp_r*temp_r);
-                        double temp_force_angle = atan2(i->getPos().y-j->getPos().y,j->getPos().x-i->getPos().x);
-                        i->recalculateForce({temp_force_val*cos(temp_force_angle),-temp_force_val*sin(temp_force_angle)});
-                    }else{
+                        double temp_r = Brain::getDistance(i->getPos(), j->getPos())/METER;
+                        //if(temp_r > MAX_DIST) continue;
+                        double temp_force_val = G*(i->getMass()*j->getMass())/(temp_r == 0 ? 0.000001 : temp_r*temp_r);
+                        double temp_force_angle = atan2(j->getPos().y-i->getPos().y,j->getPos().x-i->getPos().x);
+                        i->recalculateForce({temp_force_val*cos(temp_force_angle),temp_force_val*sin(temp_force_angle)});
+                        if(i->getId() == 1) std::cout << temp_force_val << std::endl;
+                    }/*else{
                         SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
                         SDL_RenderDrawLine(renderer, i->getPos().x, i->getPos().y, j->getPos().x, j->getPos().y);
                         
-                        double temp_r = abs(Brain::getDistance(i->getPos(), j->getPos()));
+                        double temp_r = Brain::getDistance(i->getPos(), j->getPos());
                         double x = temp_r-SPRING_LENGTH;
-                        double temp_force_angle = atan2(i->getPos().y-j->getPos().y,j->getPos().x-i->getPos().x);
-                        i->recalculateForce({0.001*x*cos(temp_force_angle),-0.001*x*sin(temp_force_angle)});
-                    }
+                        double temp_force_angle = atan2(j->getPos().y-i->getPos().y,j->getPos().x-i->getPos().x);
+                        i->recalculateForce({STIFFTNESS_COEFFITIENT*x*cos(temp_force_angle),STIFFTNESS_COEFFITIENT*x*sin(temp_force_angle)});
+                    }*/
                 }
             }
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-            i->update();
+            
             
         }
         for(auto& i: ver){
+            i->update();
             i->render();
         }
         //std::cout << std::endl;

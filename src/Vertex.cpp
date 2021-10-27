@@ -1,12 +1,13 @@
 #include "Vertex.hpp"
 
-Vertex::Vertex(int _id, double _x, double _y, SDL_Renderer* _renderer)
+Vertex::Vertex(int _id, double _x, double _y, double _mass, SDL_Renderer* _renderer)
 {
+    force = {0,0};
     renderer = _renderer;
     
     pos.x = _x;
     pos.y = _y;
-    mass = 1;
+    mass = _mass;
     acceleration = 0;
     velocity = 0;
     connections.clear();
@@ -26,7 +27,7 @@ void Vertex::recalculateForce(Vector2D _force)
 
 void Vertex::update()
 {
-    std::cout << "{ " << force.x << " " << force.y << " }" << std::endl;
+    //std::cout << "{ " << force.x << " " << force.y << " }" << std::endl;
     force_angle = atan2(force.y, force.x);
     acceleration = force.getLength() / mass;
     //std::cout << force.x << " " << force.y  << " ";

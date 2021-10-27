@@ -10,7 +10,7 @@
 
 class Vertex{
 public:
-    Vertex(int _id, double _x, double _y, SDL_Renderer* _renderer);
+    Vertex(int _id, double _x, double _y, double _mass, SDL_Renderer* _renderer);
     ~Vertex();
     
     void recalculateForce(Vector2D _force);
