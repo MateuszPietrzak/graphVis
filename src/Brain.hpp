@@ -13,6 +13,7 @@ const double STIFFTNESS_COEFFITIENT = 2;
 const double AIR_FRICTION = 0.99;
 const double METER = 100;
 
+enum Mode {edit, create, rmve};
 struct Vector2D{
     double x;
     double y;
@@ -23,13 +24,11 @@ struct Vector2D{
 
 class Brain{
 public:
-    static Vector2D addVectors(Vector2D _v1, Vector2D _v2){
-        return { _v1.x + _v2.x, _v1.y + _v2.y };
-    }
-    static double getDistance(Vector2D _v1, Vector2D _v2){
-        return abs(sqrt((_v1.x-_v2.x)*(_v1.x-_v2.x)+(_v1.y-_v2.y)*(_v1.y-_v2.y)));
-    }
+    static Vector2D addVectors(Vector2D _v1, Vector2D _v2){ return { _v1.x + _v2.x, _v1.y + _v2.y }; }
+    static double getDistance(Vector2D _v1, Vector2D _v2){ return abs(sqrt((_v1.x-_v2.x)*(_v1.x-_v2.x)+(_v1.y-_v2.y)*(_v1.y-_v2.y))); }
+    
     static void renderText(SDL_Renderer* _renderer, const char* _text, int _x, int _y, TTF_Font* _font);
+    static void renderText(SDL_Renderer* _renderer, const char* _text, int _x, int _y, TTF_Font* _font, SDL_Color _color);
 };
 
 #endif /* Brain_hpp */

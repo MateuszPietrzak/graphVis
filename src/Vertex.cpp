@@ -15,6 +15,8 @@ Vertex::Vertex(int _id, double _x, double _y, double _mass, SDL_Renderer* _rende
     connections.clear();
     
     id = _id;
+
+    pinned = false;
 }
 
 Vertex::~Vertex()
@@ -29,6 +31,13 @@ void Vertex::recalculateForce(Vector2D _force)
 
 void Vertex::update()
 {
+    if(pinned){
+        acceleration_x = 0;
+        acceleration_y = 0;
+        velocity_x = 0;
+        velocity_y = 0;
+        return;
+    }
     force_angle = atan2(force.y, force.x);
 
     acceleration_x = force.getLength() / mass * cos(force_angle);
@@ -48,9 +57,11 @@ void Vertex::update()
     force = {0,0};
 }
 
-void Vertex::render()
+void Vertex::render(TTF_Font* _font)
 {
     //std::cout << pos.x << " " << pos.y << std::endl;
     SDL_Rect tempRect = {(int)pos.x-5,(int)pos.y-5,10,10};
+    
     SDL_RenderFillRect(renderer, &tempRect);
+    Brain::renderText(renderer, std::to_string(id).c_str(),pos.x-8,pos.y-8,_font);
 }

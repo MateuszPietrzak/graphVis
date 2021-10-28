@@ -16,13 +16,16 @@ public:
     
     void recalculateForce(Vector2D _force);
     void update();
-    void render();
+    void render(TTF_Font* _font);
     
     //Setters
     
     void addConnection(int _v){connections.insert(_v);}
     void removeConnection(int _v){connections.erase(_v);}
-    
+    void setId(int _v){id = _v;}
+    void setPinned(){pinned = true;}
+    void setUnpinned(){pinned = false;}
+
     //Getters
     
     Vector2D getPos(){return pos;}
@@ -35,6 +38,7 @@ public:
         return true;
     }
     Vector2D getVelocity(){return {velocity_x,velocity_y};}
+    bool isPinned(){return pinned;}
     
 private:
     SDL_Renderer* renderer;
@@ -48,6 +52,8 @@ private:
     double velocity_x, velocity_y;
     double mass;
     std::set<int> connections;
+
+    bool pinned;
 };
 
 #endif /* Vertex_hpp */
