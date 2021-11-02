@@ -36,7 +36,8 @@ int main() {
 
     int l = 1;
     bool any_pinned;
-    
+    bool show_manual = false;
+
     if(SDL_Init(SDL_INIT_EVERYTHING)){
         std::cout << "Error: " << SDL_GetError() << std::endl;
         return 1;
@@ -105,7 +106,7 @@ int main() {
                                         }
                                     }
                                 }
-                                selected.clear();
+                                //selected.clear();
                             }else{
                                 
                                 for(int i = 0 ; i<ver.size(); ++i){
@@ -207,6 +208,9 @@ int main() {
                                 }
                                 std::cout << std::endl;
                             }
+                            break;
+                        case SDLK_m:
+                            show_manual = !show_manual;
                             break;
                         case SDLK_p:
                             any_pinned = false;
@@ -316,7 +320,9 @@ int main() {
         //Brain::renderText(renderer, std::to_string(ver[selected-1]->getId()).c_str(), 5, 5, font1);
         Brain::renderText(renderer, "[p] pin / unpin",5,21,font1);
         Brain::renderText(renderer, simulating ? "[Esc] pause" : "[Esc] resume", 650,5,font1, simulating ? SDL_Color({0,255,0,255}) : SDL_Color({255,0,0,255}));
-        Brain::renderText(renderer, "[r] reset",650,21,font1);
+        Brain::renderText(renderer, "[r] reset",5,5,font1);
+        Brain::renderText(renderer, "[m] open manual",5,37,font1);
+
         
         Brain::renderText(renderer, mode == edit ? "-> [1] edit mode" : "[1] edit mode", 5, 547, font1);
         Brain::renderText(renderer, mode == create ? "-> [2] create mode" : "[2] create mode", 5, 563, font1);
@@ -324,10 +330,16 @@ int main() {
 
         if(shiftd) Brain::renderText(renderer, "Shift", 650, 584,font1);
 
-        /*for(int i = 0; i<ver.size(); ++i){
+        for(auto& i : selected){
             Brain::renderText(renderer, std::to_string(i).c_str(), 750,400+(i*16),font1);
-            Brain::renderText(renderer, std::to_string(ver[i]->getId()).c_str(), 780,400+(i*16),font1);
-        }*/
+            //Brain::renderText(renderer, std::to_string(ver[i]->getId()).c_str(), 780,400+(i*16),font1);
+        }
+
+        if(show_manual){
+            SDL_Rect manual_rect = {100,100,600,400};
+            SDL_SetRenderDrawColor(renderer,0,0,0,50);
+            SDL_RenderFillRect(renderer, &manual_rect);
+        }
 
         SDL_RenderPresent(renderer);
 
